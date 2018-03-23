@@ -12,14 +12,15 @@ let kPageTitleViewH: CGFloat = 40
 
 class HomeViewController: UIViewController {
     
-    private lazy var pageTitleView: PageTitleView = {
+    private lazy var pageTitleView: PageTitleView = {[weak self] in
         let frame = CGRect(x: 0, y: kStatusBarH + kNavigationBarH, width: kScreenW, height: kPageTitleViewH)
         let titles = ["推荐", "游戏", "娱乐", "趣玩"]
         let pageTitleView = PageTitleView(frame: frame, titles: titles)
+        pageTitleView.delegate = self
         return pageTitleView
     }()
     
-    private lazy var pageContentView: PageContentView = {
+    private lazy var pageContentView: PageContentView = { [weak self] in
         let contentH = kScreenH - kStatusBarH - kNavigationBarH - kPageTitleViewH - kTabbarH
         let contentFrame = CGRect(x: 0, y: kStatusBarH + kNavigationBarH + kPageTitleViewH, width: kScreenW, height: contentH)
         var childVcs = [UIViewController]()
@@ -29,7 +30,8 @@ class HomeViewController: UIViewController {
             childVcs.append(childVc)
         }
         
-       let pageContentView = PageContentView(frame: contentFrame, childVcs: childVcs, parentVc: self)
+        let pageContentView = PageContentView(frame: contentFrame, childVcs: childVcs, parentVc: self)
+        pageContentView.delegate = self
         return pageContentView
     }()
 
@@ -92,4 +94,19 @@ extension HomeViewController {
         print("click qrCode btn")
     }
     
+}
+
+//MARK:遵守pageTitleViewDelegate
+extension HomeViewController: PageTitleViewDelegate{
+    func pageTitleView(pageTitleView: PageTitleView, selectedIndex index: Int) {
+//        print("点击了 \(index)")
+        pageContentView.setCurrentIndex(currentIndex: index)
+    }
+}
+
+//MARK:遵守PageContentViewDelegate
+extension HomeViewController: PageContentViewDelegate{
+    func pageContentView(pageContentView: PageContentView, progress: CGFloat, sourceIndex: Int, targetIndex: Int) {
+        pageTitleView.setTitleWithProgress(progress: progress, sourceIndex: sourceIndex, targetIndex: targetIndex)
+    }
 }
