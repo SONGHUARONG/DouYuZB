@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kContentCellID = "kContentCellID"
+private let kContentCellID = "kContentCellID"
 
 protocol PageContentViewDelegate: class {
     func pageContentView(pageContentView: PageContentView, progress: CGFloat, sourceIndex: Int, targetIndex: Int)
