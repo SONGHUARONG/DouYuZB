@@ -14,7 +14,7 @@ import UIKit
     //展示的图片地址
     var pic_url: String = ""
     //主播信息对应的字典
-    var room: [String : NSObject]? {
+    var room: [String : Any]? {
         didSet {
             guard let room = room else {
                 return
@@ -25,7 +25,7 @@ import UIKit
     //主播信息对应的模型
     var anchor: AnchorModel?
     
-    init(dic: [String : NSObject]) {
+    init(dic: [String : Any]) {
         super.init()
         setValuesForKeys(dic)
     }

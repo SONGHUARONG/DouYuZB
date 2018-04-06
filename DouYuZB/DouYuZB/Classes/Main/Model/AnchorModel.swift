@@ -25,7 +25,7 @@ import UIKit
     //所在城市
     var anchor_city: String = ""
     
-    init(dic: [String: NSObject]) {
+    init(dic: [String : Any]) {
         super.init()
         
         setValuesForKeys(dic)

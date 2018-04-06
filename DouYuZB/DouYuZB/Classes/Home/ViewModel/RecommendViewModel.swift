@@ -9,10 +9,9 @@
 import UIKit
 import Alamofire
 
-class RecommendViewModel {
+class RecommendViewModel: BaseViewModel {
     //懒加载属性
     lazy var cycleModels: [CycleModel] = [CycleModel]()
-    lazy var anchorGroups: [AnchorGroup] = [AnchorGroup]()
     private lazy var bigDataGroup: AnchorGroup = AnchorGroup()
     private lazy var prettyGroup: AnchorGroup = AnchorGroup()
 }
@@ -25,8 +24,8 @@ extension RecommendViewModel {
         NetworkTools.requestData(.get, URLString: "http://www.douyutv.com/api/v1/slide/6", parameters: parameters) { (result) in
 //            print(result)
             //由于数据访问不了，写死json数据
-            guard let resultDic = result as? [String : NSObject] else {return}
-            guard let dataArry = resultDic["data"] as? [[String : NSObject]] else {return}
+            guard let resultDic = result as? [String : Any] else {return}
+            guard let dataArry = resultDic["data"] as? [[String : Any]] else {return}
             for dic in dataArry {
                 self.cycleModels.append(CycleModel(dic: dic))
             }
@@ -50,9 +49,9 @@ extension RecommendViewModel {
         NetworkTools.requestData(.get, URLString: "http://capi.douyucdn.cn/api/v1/getbigDataRoom", parameters: ["time" : NSDate.getCurrentTime()]) { (result) in
 //            print(result)
             //1.将result转换成字典类型
-            guard let resultDic = result as? [String : NSObject] else {return}
+            guard let resultDic = result as? [String : Any] else {return}
             //2.根据data该key，获取数据
-            guard let dataArry = resultDic["data"] as? [[String : NSObject]] else{return}
+            guard let dataArry = resultDic["data"] as? [[String : Any]] else{return}
             //3.遍历数组，并将字典转换成模型对象(KVC)
             //3.1设置group属性
             self.bigDataGroup.tag_name = "热门"
@@ -77,9 +76,9 @@ extension RecommendViewModel {
         NetworkTools.requestData(.get, URLString: "http://capi.douyucdn.cn/api/v1/getVerticalRoom", parameters: parameters) { (result) in
 //            print(result)
             //1.将result转换成字典类型
-            guard let resultDic = result as? [String : NSObject] else {return}
+            guard let resultDic = result as? [String : Any] else {return}
             //2.根据data该key，获取数据
-            guard let dataArry = resultDic["data"] as? [[String : NSObject]] else{return}
+            guard let dataArry = resultDic["data"] as? [[String : Any]] else{return}
             //3.遍历数组，并将字典转换成模型对象(KVC)
             //3.1设置group属性
             self.prettyGroup.tag_name = "颜值"
@@ -95,27 +94,8 @@ extension RecommendViewModel {
         
         //5.请求第2-12组的游戏数据
         dispatchGroup.enter()
-        //https://capi.douyucdn.cn/api/v1/getHotCate?limit=4&offset=0&time=1521988663
-        NetworkTools.requestData(.get, URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters) { (result) in
-//            print(NSDate.getCurrentTime())
-//            print(result)
-            
-            //1.将result转换成字典类型
-            guard let resultDic = result as? [String : NSObject] else {return}
-            //2.根据data该key，获取数据
-            guard let dataArry = resultDic["data"] as? [[String : NSObject]] else{return}
-            //3.遍历数组，获取字典，并将字典转换成模型对象(KVC)
-            for dic in dataArry {
-                let group = AnchorGroup(dict: dic)
-                self.anchorGroups.append(group)
-            }
-//            for group in self.anchorGroups {
-//                for anchor in group.anchors{
-////                    print(anchor.nickname)
-//                }
-////                print("----------------")
-//            }
-            //4.离开组
+        
+        loadAnchorData(URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters) {
             dispatchGroup.leave()
         }
         

@@ -16,9 +16,9 @@
 
 import UIKit
 
-@objcMembers class AnchorGroup: NSObject {
+@objcMembers class AnchorGroup: BaseGameModel {
     //该组中对应的房间信息
-    var room_list: [[String:NSObject]]? {
+    var room_list: [[String : Any]]? {
         //属性监听器
         didSet {
             guard let room_list = room_list else {return}
@@ -28,30 +28,11 @@ import UIKit
 
         }
     }
-    
-    
-    
-    //该组中显示的标题
-    var tag_name: String = ""
     //该组中显示的图标
     var icon_name: String = "home_header_normal"
-    //游戏对应图标
-    var icon_url: String = ""
+
     //定义主播的模型对象数组
     lazy var anchors: [AnchorModel] = [AnchorModel]()
-    
-    init(dict: [String:AnyObject]) {
-        super.init()
-        setValuesForKeys(dict)
-    }
-    
-    override init() {
-
-    }
-    
-    //为了防止未给某些属性赋值而报错
-    override func setValue(_ value: Any?, forUndefinedKey key: String) {
-    }
     
     
 //    override func setValue(_ value: Any?, forKey key: String) {
