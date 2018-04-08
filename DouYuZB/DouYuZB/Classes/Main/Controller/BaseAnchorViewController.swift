@@ -19,7 +19,7 @@ let kNormalCellID: String = "kNormalCellID"
 let kPrettyCellID: String = "kPrettyCellID"
 private let kHeaderViewID: String = "kHeaderViewID"
 
-class BaseAnchorViewController: UIViewController {
+class BaseAnchorViewController: BaseViewController {
     
     //MARK:定义属性
     var baseVM: BaseViewModel!
@@ -64,8 +64,13 @@ class BaseAnchorViewController: UIViewController {
 
 //MARK:设置ui界面内容
 extension BaseAnchorViewController {
-    @objc func setupUI(){
+    @objc override func setupUI(){
+        //1.给父类contentView赋值
+        contentView = collectionView
+        //2.将collectionView加入view中
         view.addSubview(collectionView)
+        //3.调用父类super.setupUI()
+        super.setupUI()
     }
 }
 
@@ -77,8 +82,8 @@ extension BaseAnchorViewController {
 }
 
 
-//遵循UICollectionViewDateSource&UICollectionViewDelegate方法
-extension BaseAnchorViewController: UICollectionViewDataSource,UICollectionViewDelegate {
+//遵循UICollectionViewDateSource
+extension BaseAnchorViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return baseVM.anchorGroups.count
     }
@@ -87,7 +92,7 @@ extension BaseAnchorViewController: UICollectionViewDataSource,UICollectionViewD
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kNormalCellID, for: indexPath) as! CollectionNormalCell
-        
+       
         cell.anchor = baseVM.anchorGroups[indexPath.section].anchors[indexPath.item]
         
         return cell
@@ -95,10 +100,29 @@ extension BaseAnchorViewController: UICollectionViewDataSource,UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kHeaderViewID, for: indexPath) as! CollectionHeaderView
-        
+       
         headerView.group = baseVM.anchorGroups[indexPath.section]
         return headerView
     }
     
+}
+
+//MARK:UICollectionViewDelegate方法
+extension BaseAnchorViewController:UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let group = baseVM.anchorGroups[indexPath.section].anchors[indexPath.item]
+        //0:电脑直播  1:手机直播
+        group.isVertical == 0 ? pushNormalRoomVc() : presentShowRoomVc()
+    }
+    //Model方式
+    private func presentShowRoomVc(){
+        let showRoomVc = RoomShowViewController()
+        present(showRoomVc, animated: true, completion: nil)
+    }
+    //push方式
+    private func pushNormalRoomVc(){
+        let pushRoomVc = RoomPushViewController()
+        self.navigationController?.pushViewController(pushRoomVc, animated: true)
+    }
 }
 

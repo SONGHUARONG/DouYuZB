@@ -43,6 +43,8 @@ extension AmuseViewController {
             var tempArry = self.amuseVM.anchorGroups
             tempArry.removeFirst()
             self.amuseMenuView.groups = tempArry
+            //数据加载完成
+            self.finishLoadData()
         }
     }
 }

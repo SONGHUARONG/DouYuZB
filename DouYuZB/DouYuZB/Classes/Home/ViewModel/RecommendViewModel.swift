@@ -95,7 +95,7 @@ extension RecommendViewModel {
         //5.请求第2-12组的游戏数据
         dispatchGroup.enter()
         
-        loadAnchorData(URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters) {
+        loadAnchorData(isGroupData: true, URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters) {
             dispatchGroup.leave()
         }
         

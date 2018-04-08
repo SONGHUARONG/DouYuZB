@@ -18,9 +18,8 @@ private let kGameViewH: CGFloat = 90
 
 //定义RecommendViewController类
 class RecommendViewController: BaseAnchorViewController {
-    
+
     fileprivate lazy var recommendVM: RecommendViewModel = RecommendViewModel()
-    
     fileprivate lazy var cycleView: RecommendCycleView = {
         let cycleView = RecommendCycleView.recommendCycleView()
         cycleView.frame = CGRect(x: 0, y: -(kCycleViewH + kGameViewH), width: kScreenW, height: kCycleViewH)
@@ -44,7 +43,7 @@ extension RecommendViewController{
         baseVM = recommendVM
         
         //1.请求推荐数据
-        recommendVM.requestData(finishCallBack: {
+        recommendVM.requestData {
             //1.展示推荐数据
             self.collectionView.reloadData()
             //2.将数据传递给gameView
@@ -58,7 +57,9 @@ extension RecommendViewController{
             groups.append(moreGroup)
             
             self.gameView.groups = groups
-        })
+            //3.数据加载完成
+            self.finishLoadData()
+        }
         //2.请求无限轮播数据
         recommendVM.requestCycleData {
             self.cycleView.cycleModels = self.recommendVM.cycleModels

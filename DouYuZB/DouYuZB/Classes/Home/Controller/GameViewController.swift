@@ -15,7 +15,7 @@ private let kGameViewH: CGFloat = 90
 private let kGameCellID = "kGameCellID"
 private let kHeaderViewID = "kHeaderViewID"
 
-class GameViewController: UIViewController {
+class GameViewController: BaseViewController {
     fileprivate lazy var gameVM: GameViewModel = GameViewModel()
     fileprivate lazy var topHeaderView: CollectionHeaderView = {
         let topHeaderView = CollectionHeaderView.collectionHeaderView()
@@ -26,8 +26,9 @@ class GameViewController: UIViewController {
         return topHeaderView
     }()
     
+    
     fileprivate lazy var gameView: RecommendGameView = {
-        let gameView = RecommendGameView()
+        let gameView = RecommendGameView.recommendGameView()
         gameView.frame = CGRect(x: 0, y: -kGameViewH, width: kScreenW, height: kGameViewH)
         return gameView
     }()
@@ -63,7 +64,9 @@ class GameViewController: UIViewController {
 
 //MARK:设置UI界面
 extension GameViewController {
-    fileprivate func setupUI(){
+     override func setupUI(){
+        //0.给父类contentView赋值
+        contentView = collectionView
         //1.添加collectionView
         view.addSubview(collectionView)
         //2.将topHeaderView添加到collectionView
@@ -72,6 +75,8 @@ extension GameViewController {
         collectionView.addSubview(gameView)
         //3.设置collectionView内边距
         collectionView.contentInset = UIEdgeInsets(top: kHeaderViewH + kGameViewH, left: 0, bottom: 0, right: 0)
+        //3.调用父类super.setupUI()
+        super.setupUI()
     }
 }
 
@@ -91,6 +96,8 @@ extension GameViewController {
             //            }
             //            self.gameView.groups = tempArry
             self.gameView.groups = Array(self.gameVM.gameModels[0..<10])
+            //3.数据加载完成
+            self.finishLoadData()
         })
         
         
