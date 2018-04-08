@@ -19,9 +19,6 @@ class RoomPushViewController: UIViewController,UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         //1.隐藏导航栏
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        //2.依然保存手势
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
